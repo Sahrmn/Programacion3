@@ -29,14 +29,14 @@ class Producto
         //var_dump(pathinfo($archivo, PATHINFO_EXTENSION));
     
         if (file_exists("fotos/") == false) {
-            mkdir("Fotos/", 0777);
+            mkdir("fotos/", 0777);
         }
     
         if(file_exists($destino))
         {
             echo "La imagen ya existe!";
-            if (file_exists("Fotos/Backup") == false) {
-                mkdir("Fotos/Backup", 0777);
+            if (file_exists("fotos/backup") == false) {
+                mkdir("fotos/backup", 0777);
             }
             $nuevoNombre = $file_name . "-" . date("dmy") . "." . $extension;
             //muevo archivo antiguo a backup
@@ -69,18 +69,14 @@ class Producto
             $file = fopen("./productos.json","r");
             while(!feof($file))
             {
-                $string = fgets($file, 200); //ERROR COMUN: poner pocas letras para leer (200)
+                $string = fgets($file); 
                 //echo $string;
                 if($string != NULL)
                 {
                     $obj = json_decode($string);
-                    //var_dump($obj);
                     array_push($arrayObj, $obj);
-                    //var_dump($arrayObj);
-                    
                 }
             }
-            //var_dump($arrayObj);
             fclose($file);
             $file = fopen("./productos.json","w");
             array_push($arrayObj, $this);
@@ -100,16 +96,14 @@ class Producto
             $file = fopen("./productos.json","r");
             while(!feof($file))
             {
-                $string = fgets($file, 200); 
+                $string = fgets($file); 
                 //echo $string;
                 if($string != NULL)
                 {
                     $obj = json_decode($string);
-                    //var_dump($obj);
                     array_push($arrayObj, $obj);
                 }
             }
-            //var_dump($arrayObj);
             fclose($file);
             $tabla = "<table>";
             for ($i=0; $i < count($arrayObj); $i++) { 
@@ -121,6 +115,30 @@ class Producto
             echo "No existe el archivo";
         }
     }
+/*
+    public static function LeerArchivo($archivo)
+    {
+        $retorno = array();
+        if(file_exists($archivo))
+        {
+            $file = fopen($archivo,"r");
+            while(!feof($file))
+            {
+                $string = fgets($file);
+                if($string != NULL)
+                {
+                    $obj = json_decode($string, true);//true para que devuelva un array
+                    array_push($retorno, $obj);
+                }
+            }
+            fclose($file);
+            return $retorno;
+        }
+        else
+        {
+            echo "El archivo no existe";
+        }
+    }*/
 }
 
 ?>
