@@ -38,7 +38,7 @@ class Usuario
             //$string = fread($file);
             while(!feof($file))
             {
-                $string = fgets($file, 50);
+                $string = fgets($file);
                 //echo $string;
                 if($string != NULL)
                 {

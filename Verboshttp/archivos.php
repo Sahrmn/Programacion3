@@ -4,7 +4,7 @@ include_once "clases/usuario.php";
 //var_dump($_POST);
 
 $usuario = new Usuario($_POST["nombre"], $_POST["clave"]);
-//var_dump($usuario);
+var_dump($usuario);
 $usuario->ToJSON();
 
 

@@ -20,7 +20,7 @@ class Usuario
     public function ToJSON()
     {
         $arrayObj = array();
-        if(file_exists("d://datos//usuarios.json")== false)
+        if(file_exists("d://datos//usuarios.json")== false) //NOTA: usar rutas relativas
         {
             if(file_exists("d://datos//")== false)
             {
@@ -36,7 +36,7 @@ class Usuario
             $file = fopen("d://datos//usuarios.json","r");
             while(!feof($file))
             {
-                $string = fgets($file, 200); //ERROR COMUN: poner pocas letras para leer (200)
+                $string = fgets($file);
                 //echo $string;
                 if($string != NULL)
                 {
@@ -73,7 +73,7 @@ class Usuario
         $file = fopen("d://datos//usuarios.json","r");
             while(!feof($file))
             {
-                $string = fgets($file, 200);
+                $string = fgets($file);
                 if($string != NULL)
                 {
                     $obj = json_decode($string);
