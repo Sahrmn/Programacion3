@@ -21,7 +21,6 @@ class Inscripcion
 
     public static function inscribirAlumno($get)
     {
-        //var_dump($get);
         if (Materia::verificarIdentificador($get['codigo'])) 
         {
             if (Alumno::verificarIdentificador($get['email']))
@@ -50,9 +49,10 @@ class Inscripcion
         if(file_exists($archivo))
         {
             $flag = false;
-            //var_dump($arrayObj);
-            for ($i=0; $i < count($arrayObj); $i++) { 
-                if ($arrayObj[$i]['codigo'] == $codigo) {
+            for ($i=0; $i < count($arrayObj); $i++) 
+            { 
+                if ($arrayObj[$i]['codigo'] == $codigo) 
+                {
                     if($arrayObj[$i]['cupo'] >= 1)
                     {
                         $flag = true;
@@ -73,7 +73,6 @@ class Inscripcion
                 $file = fopen($archivo,"w");
                 foreach ($arrayObj as $key => $value) {
                     $json = json_encode($arrayObj[$key]);
-                    //var_dump($json);
                     fputs($file, $json);
                     fputs($file, "\n");
                 }
@@ -114,18 +113,14 @@ class Inscripcion
                 if($string != NULL)
                 {
                     $obj = json_decode($string);
-                        //var_dump($obj);
                     array_push($arrayObj, $obj);
-                        //var_dump($json);
                 }
             }
-            //var_dump($arrayObj);
             fclose($file);
             $file = fopen($archivo,"w");
             array_push($arrayObj, $objeto);
             foreach ($arrayObj as $key => $value) {
                 $json = json_encode($arrayObj[$key]);
-                //var_dump($json);
                 fputs($file, $json);
                 fputs($file, "\n");
             }
@@ -133,7 +128,6 @@ class Inscripcion
             echo "JSON creado con exito!";
         }
     }
-
 
     public static function inscripciones()
     {
@@ -145,21 +139,17 @@ class Inscripcion
         {
             $arg = func_get_arg(0);//puede ser materia o apellido
             $tipoArg = "";
-            foreach ($inscripciones as $key => $value) {
+            foreach ($inscripciones as $key => $value) 
+            {
                 if($inscripciones[$key]['materia'] == $arg)
                 {
                     $tipoArg = "materia";
                     break;
                 }
-            }
-            if($tipoArg == "")
-            {
-                foreach ($inscripciones as $key => $value) {
-                    if($inscripciones[$key]['apellido_al'] == $arg)
-                    {
-                        $tipoArg = "apellido";
-                        break;
-                    }
+                else if($inscripciones[$key]['apellido_al'] == $arg)
+                {
+                    $tipoArg = "apellido";
+                    break;
                 }
             }
 
@@ -171,7 +161,7 @@ class Inscripcion
                     {
                         $al = Alumno::consultarAlumno("apellido", $arg);
                         if($al != NULL)
-                        $arrayResultante = array_merge($arrayResultante, $al);
+                            $arrayResultante = array_merge($arrayResultante, $al);
                     }
                 }
             }
@@ -191,7 +181,6 @@ class Inscripcion
                 echo "El argumento " . $arg . " no existe";
                 return false;
             }
-            //var_dump($arrayResultante);
             return Alumno::devolverTabla($arrayResultante);
         }
         else
@@ -215,7 +204,7 @@ class Inscripcion
             array_push($arrayId, $inscripciones[$i]['mail_al']);
         }
 
-        //busco alumnos con esas ids
+        //busco alumno con esa id
         $archivo = "alumnos.json";
         $alumnos = array();
         if(file_exists($archivo))
@@ -228,7 +217,8 @@ class Inscripcion
                 {
                     $obj = json_decode($string, true);//true para que devuelva un array
                     
-                    foreach ($arrayId as $key => $value) {
+                    foreach ($arrayId as $key => $value) 
+                    {
                         if($arrayId[$key] == $obj['email'])
                             array_push($alumnos, $obj);
                     }                        
@@ -267,8 +257,6 @@ class Inscripcion
             echo "El archivo no existe";
         }
     }
-
-
 }
 
 

@@ -1,6 +1,4 @@
 <?php 
-ini_set('error_reporting', E_ALL);
-
 class Alumno
 {
     public $nombre;
@@ -10,17 +8,24 @@ class Alumno
 
     public function __construct($nom, $ap, $mail, $photo)
     {
-        $this->nombre = utf8_encode($nom);
-        $this->apellido = utf8_encode($ap);
-        $this->email = utf8_encode($mail);
-        $nom = $this->nombre . $this->apellido;
-        $this->foto = utf8_encode(Alumno::MoverArchivo($nom, $photo));
+        if($nom != "")
+            $this->nombre = utf8_encode($nom);
+        if($ap != "")
+        {
+            $this->apellido = utf8_encode($ap);
+            $nom = $this->apellido;
+        }    
+        if($mail != "")    
+            $this->email = utf8_encode($mail);
+        
+        if($photo != NULL && $ap != "")
+            $this->foto = utf8_encode(Alumno::MoverArchivo($nom, $photo));
     }
 
     public static function cargarAlumno($post, $foto)
     {
         $archivo = "alumnos.json";
-        //verificar que no se repita identificador (email) 
+        //verifico que no se repita el identificador (email) 
         if (Alumno::verificarIdentificador($post["email"])== false) 
         {    
             $alumno = new Alumno($post['nombre'], $post['apellido'], $post['email'], $foto);
@@ -42,18 +47,14 @@ class Alumno
                     if($string != NULL)
                     {
                         $obj = json_decode($string);
-                            //var_dump($obj);
                         array_push($arrayObj, $obj);
-                            //var_dump($json);
                     }
                 }
-                var_dump($arrayObj);
                 fclose($file);
                 $file = fopen($archivo,"w");
                 array_push($arrayObj, $alumno);
                 foreach ($arrayObj as $key => $value) {
                     $json = json_encode($arrayObj[$key]);
-                    //var_dump($json);
                     fputs($file, $json);
                     fputs($file, "\n");
                 }
@@ -69,20 +70,17 @@ class Alumno
 
     public static function verificarIdentificador($id)
     {
-        //echo "DENTRO DE INDENTIFICADOR <BR>";
         $archivo = "alumnos.json";
         $arrayObj = Alumno::LeerArchivo($archivo);
         if(file_exists($archivo) == true)
         {
             $flag = false;
-            //var_dump($arrayObj);
             for ($i=0; $i < count($arrayObj); $i++) { 
                 if ($arrayObj[$i]['email'] == $id) {
                     $flag = true;
                     break;
                 }
             }
-
             if ($flag == false) {
                 //echo 'El identificador no existe.';
                 return false;
@@ -107,8 +105,6 @@ class Alumno
     //archivo: $_FILES
     public static function MoverArchivo($nom, $archivo)
     {
-        //var_dump($archivo);
-        //var_dump($nom);
         $extension = Alumno::get_file_extension($archivo["foto"]["name"]);
         $file_name = preg_replace('[\s+]','',$nom); //quito espacios en blanco
         $destino = "fotos/" . $file_name . "." . $extension;
@@ -152,20 +148,18 @@ class Alumno
         if(file_exists($archivo) == true)
         {
             $flag = false;
-            for ($i=0; $i < count($arrayObj); $i++) { 
+            for ($i=0; $i < count($arrayObj); $i++) 
+            { 
                 //strcasecmp es case INsensitive
                 if (strcasecmp($arrayObj[$i][$nombreParametro], $parametro) == 0) {
                     $obj = $arrayObj[$i];
-                    //var_dump($obj);
                     array_push($arrayResultante, $obj);
-                    //var_dump($arrayResultante);
                     $flag = true;
                     if($nombreParametro == "email")
                         break;
                 }
             }
             if ($flag) {
-                //var_dump($arrayResultante);
                 return $arrayResultante;
             }
             else
@@ -183,7 +177,6 @@ class Alumno
     public static function devolverTabla($alumnos)
     {
         $tabla = "<table><tr><th>Nombre</th><th>Apellido</th><th>Email</th></tr>";
-        //var_dump($alumnos);
         foreach ($alumnos as $key => $value) {
             $tabla = $tabla . "<tr><td>" . $alumnos[$key]['nombre'] . "</td><td>" . $alumnos[$key]['apellido'] . "</td><td>" . $alumnos[$key]['email'] . "</td></tr>";
         }
@@ -218,10 +211,10 @@ class Alumno
 
     public static function modificarAlumno($post, $foto)
     {
-        var_dump($foto);
         $archivo = "alumnos.json";
         $arrayAlumnos = Alumno::LeerArchivo($archivo);
         
+        //modifico
         for ($i=0; $i < count($arrayAlumnos); $i++) { 
             if($arrayAlumnos[$i]['email'] == $post['email'])
             {
@@ -232,10 +225,10 @@ class Alumno
             }
         }
 
+        //sobreescribo
         $file = fopen($archivo,"w");
         foreach ($arrayAlumnos as $key => $value) {
             $json = json_encode($arrayAlumnos[$key]);
-            //var_dump($json);
             fputs($file, $json);
             fputs($file, "\n");
         }
@@ -245,7 +238,6 @@ class Alumno
     public static function devolverTablaCompleta($alumnos)
     {
         $tabla = "<table><tr><th>Nombre</th><th>Apellido</th><th>Email</th><th>Foto</th></tr>";
-        //var_dump($alumnos);
         foreach ($alumnos as $key => $value) {
             $tabla = $tabla . "<tr><td>" . $alumnos[$key]['nombre'] . "</td><td>" . $alumnos[$key]['apellido'] . "</td><td>" . $alumnos[$key]['email'] . "</td><td><img src='fotos/" . $alumnos[$key]['foto'] . "' width='100px'></td></tr>";
         }

@@ -19,9 +19,6 @@ class Materia
         if(Materia::verificarIdentificador($post['codigo'])== false)
         {
             $materia = new Materia($post["nombre"], $post["codigo"], $post["cupo"], $post["aula"]);
-            echo "CREO OBJETO <BR>";
-            //var_dump($materia);
-            //echo $post["nombre"];
             Materia::ToJSON($materia);
         }
         else
@@ -51,18 +48,14 @@ class Materia
                 if($string != NULL)
                 {
                     $obj = json_decode($string);
-                        //var_dump($obj);
                     array_push($arrayObj, $obj);
-                        //var_dump($json);
                 }
             }
-            //var_dump($arrayObj);
             fclose($file);
             $file = fopen($archivo,"w");
             array_push($arrayObj, $materia);
             foreach ($arrayObj as $key => $value) {
                 $json = json_encode($arrayObj[$key]);
-                //var_dump($json);
                 fputs($file, $json);
                 fputs($file, "\n");
             }
@@ -87,7 +80,6 @@ class Materia
                 array_push($arrayObj, $obj);
             }
             fclose($file);
-            //var_dump($arrayObj);
             for ($i=0; $i < count($arrayObj); $i++) { 
                 if ($arrayObj[$i]['codigo'] == $id) {
                     $flag = true;
@@ -109,13 +101,6 @@ class Materia
             return false;
         }
     }
-
-    public static function RetornoMateria()
-    {
-        
-    }
-
-
 }
 
 
